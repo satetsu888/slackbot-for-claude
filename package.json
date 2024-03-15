@@ -1,0 +1,14 @@
+{
+  "name": "slackbot-for-claude",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "satetsu888",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.18.0",
+    "@slack/bolt": "^3.17.1"
+  }
+}
