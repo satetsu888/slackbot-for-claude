@@ -36,6 +36,12 @@ app.event("app_mention", async ({ event, context, client, say }) => {
   console.debug("event", event);
   console.debug("context", context)
 
+  await client.reactions.add({
+    channel: event.channel,
+    name: "thinking_face",
+    timestamp: event.ts,
+  });
+
   let messages = [];
   if (event.thread_ts) {
     const thread = await client.conversations.replies({
@@ -82,6 +88,12 @@ app.event("app_mention", async ({ event, context, client, say }) => {
   //   ],
   // }
   console.debug("message", message)
+
+  await client.reactions.remove({
+    channel: event.channel,
+    name: "thinking_face",
+    timestamp: event.ts,
+  });
 
   await say({
     text: message.content[0].text,
