@@ -1,6 +1,28 @@
 const { App } = require('@slack/bolt');
 const { Anthropic } = require('@anthropic-ai/sdk')
 
+// Initializes your app with your bot token and signing secret
+
+if (!process.env.SLACK_BOT_TOKEN) {
+  console.error("SLACK_BOT_TOKEN is required")
+  process.exit(1)
+}
+
+if (!process.env.SLACK_SIGNING_SECRET) {
+  console.error("SLACK_SIGNING_SECRET is required")
+  process.exit(1)
+}
+
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error("ANTHROPIC_API_KEY is required")
+  process.exit(1)
+}
+
+if (!process.env.CLAUDE_MODEL) {
+  console.error("CLAUDE_MODEL is required")
+  process.exit(1)
+}
+
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
