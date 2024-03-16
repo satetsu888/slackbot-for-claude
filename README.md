@@ -20,4 +20,5 @@ TBD
 | ENVS | default | description |
 | -------- | -------- | -------- |
 | FLAT_RESPONSE   | false  | In default, bot response will create a thread, if set true bot respond message to the channel.  |
+| REACTION_EMOJI   | `thinking_face` | Change the emoji displayed while the bot is processing. |
 | SKIP_CLAUDE_API   | false   | If set true, skip Claude API call and always get dummy message.  |

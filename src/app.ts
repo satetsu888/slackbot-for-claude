@@ -12,13 +12,15 @@ const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+const reactionEmoji = process.env.REACTION_EMOJI ?? "thinking_face"
+
 app.event("app_mention", async ({ event, context, client, say }) => {
   if(isDebug) console.debug("event", event)
   if(isDebug) console.debug("context", context)
 
   await client.reactions.add({
     channel: event.channel,
-    name: "thinking_face",
+    name: reactionEmoji,
     timestamp: event.ts,
   })
 
@@ -48,15 +50,15 @@ app.event("app_mention", async ({ event, context, client, say }) => {
       })
   if(isDebug) console.debug("response", response)
 
-  await client.reactions.remove({
-    channel: event.channel,
-    name: "thinking_face",
-    timestamp: event.ts,
-  })
-
   await say({
     text: response.content[0].text,
     thread_ts: threadTs,
+  })
+
+  await client.reactions.remove({
+    channel: event.channel,
+    name: reactionEmoji,
+    timestamp: event.ts,
   })
 });
 
