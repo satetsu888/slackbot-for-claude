@@ -1,3 +1,6 @@
+import { type ConversationsRepliesResponse } from "@slack/web-api";
+import { MessageParam } from "./types";
+
 export const checkRequiredEnvs = (): Array<string> => {
   const requiredEnvs = [
     "SLACK_BOT_TOKEN",
@@ -17,26 +20,27 @@ export const checkRequiredEnvs = (): Array<string> => {
   return emptyEnvs
 };
 
-export const buildMessageFromSlackThread = async (thread: any  , botId: string) => {
-  type Role = "assistant" | "user"
-  type Content = {type: "text", text: string}
+export const buildMessageFromSlackThread = async (thread: ConversationsRepliesResponse  , botId: string): Promise<MessageParam[]> => {
+  if (!thread.messages) {
+    return []
+  }
 
-  const messages = thread.messages.map((message: any) => {
+  const messages = thread.messages.map<MessageParam>((message) => {
     return {
       role: message.bot_id === botId ? "assistant" : "user",
-      content: [{type: "text", text: message.text}],
+      content: [{type: "text", text: message.text ?? ""}],
     }
-  }).reduce((acc: any, message: any) => {
+  }).reduce((acc: Array<MessageParam>, message: MessageParam) => {
     if (acc.length === 0) {
       return [message]
+    }
+
+    const last = acc[acc.length - 1]
+    if (last.role === message.role) {
+      last.content = last.content.concat(message.content)
+      return acc
     } else {
-      const last = acc[acc.length - 1]
-      if (last.role === message.role) {
-        last.content = last.content.concat(message.content)
-        return acc
-      } else {
-        return acc.concat([message])
-      }
+      return acc.concat([message])
     }
   }, [])
   if(isDebug) console.debug("messages", JSON.stringify(messages, null, 2))

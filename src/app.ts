@@ -1,6 +1,7 @@
 import { App } from '@slack/bolt'
 import { Anthropic } from '@anthropic-ai/sdk'
 import { checkRequiredEnvs, buildMessageFromSlackThread, isDebug } from './utils'
+import { MessageParam } from './types';
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -21,7 +22,7 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     timestamp: event.ts,
   });
 
-  let contextMessages
+  let contextMessages: Array<MessageParam>
   if (event.thread_ts) {
     const thread = await client.conversations.replies({
       channel: event.channel,
@@ -31,7 +32,9 @@ app.event("app_mention", async ({ event, context, client, say }) => {
 
     contextMessages = await buildMessageFromSlackThread(thread, context.botId ?? "")
   } else {
-    contextMessages = [{ role: "user", content: event.text }]
+    contextMessages = [
+      { role: "user", content: [{ type: "text", text: event.text }] },
+    ];
   }
 
   const threadTs = event.thread_ts ? event.thread_ts : process.env.FLAT_RESPONSE ? undefined : event.ts
