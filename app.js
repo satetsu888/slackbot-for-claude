@@ -1,27 +1,6 @@
 const { App } = require('@slack/bolt');
 const { Anthropic } = require('@anthropic-ai/sdk')
-
-// Initializes your app with your bot token and signing secret
-
-if (!process.env.SLACK_BOT_TOKEN) {
-  console.error("SLACK_BOT_TOKEN is required")
-  process.exit(1)
-}
-
-if (!process.env.SLACK_SIGNING_SECRET) {
-  console.error("SLACK_SIGNING_SECRET is required")
-  process.exit(1)
-}
-
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.error("ANTHROPIC_API_KEY is required")
-  process.exit(1)
-}
-
-if (!process.env.CLAUDE_MODEL) {
-  console.error("CLAUDE_MODEL is required")
-  process.exit(1)
-}
+const { checkRequiredEnvs, buildMessageFromSlackThread, isDebug } = require('./utils');
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -33,8 +12,8 @@ const anthropic = new Anthropic({
 });
 
 app.event("app_mention", async ({ event, context, client, say }) => {
-  console.debug("event", event);
-  console.debug("context", context)
+  if(isDebug) console.debug("event", event)
+  if(isDebug) console.debug("context", context)
 
   await client.reactions.add({
     channel: event.channel,
@@ -42,36 +21,19 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     timestamp: event.ts,
   });
 
-  let messages = [];
+
+  let messages
   if (event.thread_ts) {
     const thread = await client.conversations.replies({
       channel: event.channel,
       ts: event.thread_ts,
     });
-    console.debug("thread", thread);
+    if(isDebug) console.debug("thread", thread)
 
-    messages = thread.messages.map((message) => {
-      return {
-        role: message.bot_id === context.botId ? "assistant" : "user",
-        content: [{type: "text", text: message.text}],
-      }
-    }).reduce((acc, message) => {
-      if (acc.length === 0) {
-        return [message]
-      } else {
-        const last = acc[acc.length - 1]
-        if (last.role === message.role) {
-          last.content = last.content.concat(message.content)
-          return acc
-        } else {
-          return acc.concat([message])
-        }
-      }
-    }, [])
+    messages = await buildMessageFromSlackThread(thread, context.botId)
   } else {
-    messages.push({ role: "user", content: event.text })
+    messages = [{ role: "user", content: event.text }]
   }
-  console.debug("messages", JSON.stringify(messages, null, 2))
 
   const threadTs = event.thread_ts ?? event.ts
 
@@ -87,7 +49,7 @@ app.event("app_mention", async ({ event, context, client, say }) => {
   //     },
   //   ],
   // }
-  console.debug("message", message)
+  if(isDebug) console.debug("message", message)
 
   await client.reactions.remove({
     channel: event.channel,
@@ -102,6 +64,12 @@ app.event("app_mention", async ({ event, context, client, say }) => {
 });
 
 (async () => {
+  const emptyEnvs = checkRequiredEnvs()
+  if (emptyEnvs.length > 0) {
+    console.error(`The following environment variables are not set: ${emptyEnvs.join(", ")}`)
+    process.exit(1)
+  }
+
   await app.start(process.env.PORT || 3000);
 
   console.log('⚡️ Bolt app is running!');
