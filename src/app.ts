@@ -1,7 +1,7 @@
 import { App } from '@slack/bolt'
 import { Anthropic } from '@anthropic-ai/sdk'
-import { checkRequiredEnvs, buildMessageFromSlackThread, isDebug } from './utils'
-import { MessageParam } from './types';
+import { checkRequiredEnvs, buildClaudeAPIMessageFromSlackThread, isDebug } from './utils'
+import { ClaudeAPIMessage } from './types';
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -10,7 +10,7 @@ const app = new App({
 
 const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
-});
+})
 
 app.event("app_mention", async ({ event, context, client, say }) => {
   if(isDebug) console.debug("event", event)
@@ -20,21 +20,21 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     channel: event.channel,
     name: "thinking_face",
     timestamp: event.ts,
-  });
+  })
 
-  let contextMessages: Array<MessageParam>
+  let claudeAPIMessages: Array<ClaudeAPIMessage>
   if (event.thread_ts) {
     const thread = await client.conversations.replies({
       channel: event.channel,
       ts: event.thread_ts,
-    });
+    })
     if(isDebug) console.debug("thread", thread)
 
-    contextMessages = await buildMessageFromSlackThread(thread, context.botId ?? "")
+    claudeAPIMessages = await buildClaudeAPIMessageFromSlackThread(thread, context.botId ?? "")
   } else {
-    contextMessages = [
+    claudeAPIMessages = [
       { role: "user", content: [{ type: "text", text: event.text }] },
-    ];
+    ]
   }
 
   const threadTs = event.thread_ts ? event.thread_ts : process.env.FLAT_RESPONSE ? undefined : event.ts
@@ -43,16 +43,16 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     ? { content: [{ text: "Request to ClaudeAPI is skipped, This is dummy response message." }] }
     : await anthropic.messages.create({
         max_tokens: 1024,
-        messages: contextMessages,
+        messages: claudeAPIMessages,
         model: process.env.CLAUDE_MODEL ?? "claude-3-sonnet-20240229",
-      });
+      })
   if(isDebug) console.debug("response", response)
 
   await client.reactions.remove({
     channel: event.channel,
     name: "thinking_face",
     timestamp: event.ts,
-  });
+  })
 
   await say({
     text: response.content[0].text,
@@ -67,7 +67,7 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     process.exit(1)
   }
 
-  await app.start(process.env.PORT || 3000);
+  await app.start(process.env.PORT || 3000)
 
-  console.log('⚡️ Bolt app is running!');
+  console.log('⚡️ Bolt app is running!')
 })();

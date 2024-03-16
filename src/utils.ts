@@ -1,5 +1,5 @@
-import { type ConversationsRepliesResponse } from "@slack/web-api";
-import { MessageParam } from "./types";
+import { type ConversationsRepliesResponse as SlackConversationsRepliesResponse } from "@slack/web-api"
+import { ClaudeAPIMessage } from "./types"
 
 export const checkRequiredEnvs = (): Array<string> => {
   const requiredEnvs = [
@@ -18,19 +18,19 @@ export const checkRequiredEnvs = (): Array<string> => {
   })
 
   return emptyEnvs
-};
+}
 
-export const buildMessageFromSlackThread = async (thread: ConversationsRepliesResponse  , botId: string): Promise<MessageParam[]> => {
+export const buildClaudeAPIMessageFromSlackThread = async (thread: SlackConversationsRepliesResponse  , botId: string): Promise<ClaudeAPIMessage[]> => {
   if (!thread.messages) {
     return []
   }
 
-  const messages = thread.messages.map<MessageParam>((message) => {
+  const messages = thread.messages.map<ClaudeAPIMessage>((message) => {
     return {
       role: message.bot_id === botId ? "assistant" : "user",
       content: [{type: "text", text: message.text ?? ""}],
     }
-  }).reduce((acc: Array<MessageParam>, message: MessageParam) => {
+  }).reduce((acc: Array<ClaudeAPIMessage>, message: ClaudeAPIMessage) => {
     if (acc.length === 0) {
       return [message]
     }
