@@ -1,4 +1,4 @@
-const checkRequiredEnvs = () => {
+export const checkRequiredEnvs = (): Array<string> => {
   const requiredEnvs = [
     "SLACK_BOT_TOKEN",
     "SLACK_SIGNING_SECRET",
@@ -6,7 +6,7 @@ const checkRequiredEnvs = () => {
     "CLAUDE_MODEL",
   ]
 
-  const emptyEnvs = []
+  const emptyEnvs: Array<string> = []
 
   requiredEnvs.forEach((env) => {
     if (!process.env[env]) {
@@ -17,13 +17,16 @@ const checkRequiredEnvs = () => {
   return emptyEnvs
 };
 
-const buildMessageFromSlackThread = async (thread, botId) => {
-  const messages = thread.messages.map((message) => {
+export const buildMessageFromSlackThread = async (thread: any  , botId: string) => {
+  type Role = "assistant" | "user"
+  type Content = {type: "text", text: string}
+
+  const messages = thread.messages.map((message: any) => {
     return {
       role: message.bot_id === botId ? "assistant" : "user",
       content: [{type: "text", text: message.text}],
     }
-  }).reduce((acc, message) => {
+  }).reduce((acc: any, message: any) => {
     if (acc.length === 0) {
       return [message]
     } else {
@@ -41,8 +44,4 @@ const buildMessageFromSlackThread = async (thread, botId) => {
   return messages
 }
 
-const isDebug = process.env.NODE_ENV !== "production"
-
-exports.checkRequiredEnvs = checkRequiredEnvs;
-exports.buildMessageFromSlackThread = buildMessageFromSlackThread;
-exports.isDebug = isDebug;
+export const isDebug = process.env.NODE_ENV !== "production"

@@ -1,6 +1,6 @@
-const { App } = require('@slack/bolt');
-const { Anthropic } = require('@anthropic-ai/sdk')
-const { checkRequiredEnvs, buildMessageFromSlackThread, isDebug } = require('./utils');
+import { App } from '@slack/bolt'
+import { Anthropic } from '@anthropic-ai/sdk'
+import { checkRequiredEnvs, buildMessageFromSlackThread, isDebug } from './utils'
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -29,19 +29,19 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     });
     if(isDebug) console.debug("thread", thread)
 
-    contextMessages = await buildMessageFromSlackThread(thread, context.botId)
+    contextMessages = await buildMessageFromSlackThread(thread, context.botId ?? "")
   } else {
     contextMessages = [{ role: "user", content: event.text }]
   }
 
-  const threadTs = event.thread_ts ? event.thread_ts : process.env.FLAT_RESPONSE ? null : event.ts
+  const threadTs = event.thread_ts ? event.thread_ts : process.env.FLAT_RESPONSE ? undefined : event.ts
 
   const response = process.env.SKIP_CLAUDE_API
     ? { content: [{ text: "Request to ClaudeAPI is skipped, This is dummy response message." }] }
     : await anthropic.messages.create({
         max_tokens: 1024,
         messages: contextMessages,
-        model: process.env.CLAUDE_MODEL,
+        model: process.env.CLAUDE_MODEL ?? "claude-3-sonnet-20240229",
       });
   if(isDebug) console.debug("response", response)
 
