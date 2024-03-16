@@ -14,3 +14,10 @@ Please note that this project is a work in progress and may have unresolved bugs
 ## Setup
 
 TBD
+
+## Options
+
+| ENVS | default | description |
+| -------- | -------- | -------- |
+| FLAT_RESPONSE   | false  | In default, bot response will create a thread, if set true bot respond message to the channel.  |
+| SKIP_CLAUDE_API   | false   | If set true, skip Claude API call and always get dummy message.  |
