@@ -21,8 +21,7 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     timestamp: event.ts,
   });
 
-
-  let messages
+  let contextMessages
   if (event.thread_ts) {
     const thread = await client.conversations.replies({
       channel: event.channel,
@@ -30,26 +29,21 @@ app.event("app_mention", async ({ event, context, client, say }) => {
     });
     if(isDebug) console.debug("thread", thread)
 
-    messages = await buildMessageFromSlackThread(thread, context.botId)
+    contextMessages = await buildMessageFromSlackThread(thread, context.botId)
   } else {
-    messages = [{ role: "user", content: event.text }]
+    contextMessages = [{ role: "user", content: event.text }]
   }
 
-  const threadTs = event.thread_ts ?? event.ts
+  const threadTs = event.thread_ts ? event.thread_ts : process.env.FLAT_RESPONSE ? null : event.ts
 
-  const message = await anthropic.messages.create({
-    max_tokens: 1024,
-    messages: messages,
-    model: process.env.CLAUDE_MODEL,
-  })
-  // const message = {
-  //   content: [
-  //     {
-  //       text: "dummy",
-  //     },
-  //   ],
-  // }
-  if(isDebug) console.debug("message", message)
+  const response = process.env.SKIP_CLAUDE_API
+    ? { content: [{ text: "Request to ClaudeAPI is skipped, This is dummy response message." }] }
+    : await anthropic.messages.create({
+        max_tokens: 1024,
+        messages: contextMessages,
+        model: process.env.CLAUDE_MODEL,
+      });
+  if(isDebug) console.debug("response", response)
 
   await client.reactions.remove({
     channel: event.channel,
@@ -58,7 +52,7 @@ app.event("app_mention", async ({ event, context, client, say }) => {
   });
 
   await say({
-    text: message.content[0].text,
+    text: response.content[0].text,
     thread_ts: threadTs,
   })
 });
