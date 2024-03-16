@@ -2,7 +2,8 @@
   "name": "slackbot-for-claude",
   "version": "0.0.1",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "build": "tsc",
+    "dev": "tsc && node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "satetsu888",
