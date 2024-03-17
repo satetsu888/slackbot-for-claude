@@ -25,7 +25,7 @@ Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 1. Go to `OAuth & Permissions` and click `Install App to Workspace`.
 2. Click `Allow` to grant the app the necessary permissions.
 
-*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](https://github.com/satetsu888/slackbot-for-claude/blob/main/oauth-flow-mode.md).
+*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](https://github.com/satetsu888/slackbot-for-claude/blob/main/docs/oauth-flow-mode.md).
 
 ### 3. Get the Slack Bot Token
 
