@@ -5,6 +5,9 @@ This is a straightforward Slackbot designed to facilitate interaction with the C
 - This is designed for use within a single Slack workspace.
 - Please note that this project is a work in progress and may have unresolved bugs or incomplete features.
 
+![image](./docs/image.png)
+
+
 ## Features
 
 - [x] Responds to mentions
@@ -16,7 +19,7 @@ This is a straightforward Slackbot designed to facilitate interaction with the C
 
 ### 1. Create a Slack App
 
-Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-app-manifest.json](https://github.com/satetsu888/slackbot-for-claude/blob/main/slack-app-manifest.json)
+Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-app-manifest.json](./slack-app-manifest.json)
 
 *Note: You'll need to replace some URLs in the manifest file.
 
@@ -25,7 +28,7 @@ Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 1. Go to `OAuth & Permissions` and click `Install App to Workspace`.
 2. Click `Allow` to grant the app the necessary permissions.
 
-*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](https://github.com/satetsu888/slackbot-for-claude/blob/main/docs/oauth-flow-mode.md).
+*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](./docs/oauth-flow-mode.md).
 
 ### 3. Get the Slack Bot Token
 
