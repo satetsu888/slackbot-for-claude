@@ -54,7 +54,7 @@ Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 
     ```bash
     npm install
-    npm start
+    npm run dev
     ```
 
 4. Invite the bot to a channel and mention the bot to see the response.
