@@ -1,7 +1,6 @@
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 
-export type Role = "assistant" | "user"
 export type ClaudeAPIMessage = {
-  role: Role,
+  role: "assistant" | "user";
   content: Array<TextBlock>;
 }

@@ -3,7 +3,6 @@ import { ClaudeAPIMessage } from "./types"
 
 export const checkRequiredEnvs = (): Array<string> => {
   const requiredEnvs = [
-    "SLACK_BOT_TOKEN",
     "SLACK_SIGNING_SECRET",
     "ANTHROPIC_API_KEY",
     "CLAUDE_MODEL",
@@ -16,6 +15,20 @@ export const checkRequiredEnvs = (): Array<string> => {
       emptyEnvs.push(env)
     }
   })
+
+  // check for oauth setting
+  if (!process.env["SLACK_BOT_TOKEN"]) {
+    const oauthRequiredEnvs = [
+      "SLACK_CLIENT_ID",
+      "SLACK_CLIENT_SECRET",
+    ]
+
+    oauthRequiredEnvs.forEach((env) => {
+      if (!process.env[env]) {
+        emptyEnvs.push(env)
+      }
+    })
+  }
 
   return emptyEnvs
 }

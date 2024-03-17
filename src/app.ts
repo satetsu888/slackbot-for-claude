@@ -1,12 +1,50 @@
-import { App } from '@slack/bolt'
+import { App, type AppOptions, type Installation, type InstallationQuery } from '@slack/bolt'
 import { Anthropic } from '@anthropic-ai/sdk'
 import { checkRequiredEnvs, buildClaudeAPIMessageFromSlackThread, isDebug } from './utils'
 import { ClaudeAPIMessage } from './types';
 
-const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
-});
+const emptyEnvs = checkRequiredEnvs()
+if (emptyEnvs.length > 0) {
+  console.error(`The following environment variables are not set: ${emptyEnvs.join(", ")}`)
+  process.exit(1)
+}
+
+let appArgs: AppOptions
+if (process.env.SLACK_BOT_TOKEN) {
+  appArgs = {
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    token: process.env.SLACK_BOT_TOKEN,
+  }
+} else {
+  console.log("!!! SLACK_BOT_TOKEN is not set. App is now running in OAuth flow mode. !!!")
+  appArgs = {
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    clientId: process.env.SLACK_CLIENT_ID,
+    clientSecret: process.env.SLACK_CLIENT_SECRET,
+    stateSecret: Math.random().toString(32).substring(2),
+    scopes: [
+      "app_mentions:read",
+      "chat:write",
+      "reactions:write",
+      "channels:history",
+    ],
+    installationStore: {
+      storeInstallation: async (installation: Installation) => {
+        console.log("storeInstallation", installation)
+        console.log("bot token: ", installation.bot?.token)
+      },
+      fetchInstallation: async (installQuery: InstallationQuery<boolean>) => {
+        console.log("fetchInstallation", installQuery)
+        return {} as Installation
+      },
+    },
+    installerOptions: {
+      stateVerification: false,
+    },
+  };
+}
+
+const app = new App(appArgs)
 
 const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
@@ -63,12 +101,6 @@ app.event("app_mention", async ({ event, context, client, say }) => {
 });
 
 (async () => {
-  const emptyEnvs = checkRequiredEnvs()
-  if (emptyEnvs.length > 0) {
-    console.error(`The following environment variables are not set: ${emptyEnvs.join(", ")}`)
-    process.exit(1)
-  }
-
   await app.start(process.env.PORT || 3000)
 
   console.log('⚡️ Bolt app is running!')
