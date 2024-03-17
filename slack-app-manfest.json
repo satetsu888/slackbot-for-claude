@@ -1,0 +1,37 @@
+{
+    "display_information": {
+        "name": "Claude Bot",
+        "description": "Claude API Bot",
+        "background_color": "#000000"
+    },
+    "features": {
+        "bot_user": {
+            "display_name": "Claude Bot",
+            "always_online": false
+        }
+    },
+    "oauth_config": {
+        "redirect_urls": [
+            "https://<your-app-host>/slack/oauth_redirect"
+        ],
+        "scopes": {
+            "bot": [
+                "app_mentions:read",
+                "chat:write",
+                "reactions:write",
+                "channels:history"
+            ]
+        }
+    },
+    "settings": {
+        "event_subscriptions": {
+            "request_url": "https://<your-app-host>/slack/events",
+            "bot_events": [
+                "app_mention"
+            ]
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": false,
+        "token_rotation_enabled": false
+    }
+}
