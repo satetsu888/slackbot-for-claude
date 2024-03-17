@@ -5,7 +5,6 @@ export const checkRequiredEnvs = (): Array<string> => {
   const requiredEnvs = [
     "SLACK_SIGNING_SECRET",
     "ANTHROPIC_API_KEY",
-    "CLAUDE_MODEL",
   ]
 
   const emptyEnvs: Array<string> = []

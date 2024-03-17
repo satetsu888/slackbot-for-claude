@@ -25,7 +25,7 @@ Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 1. Go to `OAuth & Permissions` and click `Install App to Workspace`.
 2. Click `Allow` to grant the app the necessary permissions.
 
-*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](#).
+*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](https://github.com/satetsu888/slackbot-for-claude/blob/main/oauth-flow-mode.md).
 
 ### 3. Get the Slack Bot Token
 
@@ -44,7 +44,6 @@ Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
     export SLACK_BOT_TOKEN=<Slack Bot Token you get from the previous step>
     export SLACK_SIGNING_SECRET=<Get it from Slack App Basic Information>
     export ANTHROPIC_API_KEY=<Claude API Key you get from the previous step>
-    export CLAUDE_MODEL=claude-3-sonnet-20240229
     ```
 
 3. Run the app with the following command:
@@ -64,6 +63,7 @@ Some options can be set with environment variables.
 
 | ENVS | default | description |
 | -------- | -------- | -------- |
+| CLAUDE_MODEL | `claude-3-sonnet-20240229` | The model name to be used with the Claude API. You can choose from `claude-3-opus-20240229`, `claude-3-sonnet-20240229`, or `claude-3-haiku-20240307`. |
 | FLAT_RESPONSE   | false  | If set to true, the bot will respond directly in the channel instead of creating a thread. |
 | REACTION_EMOJI   | `thinking_face` | Change the emoji displayed while the bot is processing. |
 | PORT   | 3000   | Port number.  |
