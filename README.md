@@ -1,31 +1,31 @@
-# slackbot for Claude API
+# Slackbot for Claude API
 
-Simple slack bot to request Claude API.
+This is a straightforward Slackbot designed to facilitate interaction with the Claude API.
 
-- This bot is designed for a single workspace.
+- This is designed for use within a single Slack workspace.
 - Please note that this project is a work in progress and may have unresolved bugs or incomplete features.
 
 ## Features
 
-- [x] response to mentions
-- [x] call Claude API with thread messages
-- [x] processing reaction by emoji
-- [ ] image integration
+- [x] Responds to mentions
+- [x] Calls the Claude API with thread messages
+- [x] Processes reactions by emoji
+- [ ] Image integration (upcoming)
 
 ## Setup
 
 ### 1. Create a Slack App
 
-Go to [Slack API](https://api.slack.com/apps) and create a new app with [slack-app-manifest.json](https://github.com/satetsu888/slackbot-for-claude/blob/main/slack-app-manifest.json)
+Visit [Slack API](https://api.slack.com/apps) and create a new app with [slack-app-manifest.json](https://github.com/satetsu888/slackbot-for-claude/blob/main/slack-app-manifest.json)
 
-*You need to replace some urls in the manifest file.
+*Note: You'll need to replace some URLs in the manifest file.
 
 ### 2. Install the App to your Workspace
 
 1. Go to `OAuth & Permissions` and click `Install App to Workspace`.
 2. Click `Allow` to grant the app the necessary permissions.
 
-*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. To obtain the Bot Token, the admin of your workspace needs to install the app. Please read [OAuth flow mode](#) for the details.
+*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. In this case, the admin of your workspace needs to install the app. For more details, please refer to [OAuth flow mode](#).
 
 ### 3. Get the Slack Bot Token
 
@@ -33,7 +33,7 @@ Go to [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 
 ### 4. Get the Claude API Key
 
-1. Go to [Claude API Dashboard](https://console.anthropic.com/) and create a new API key.
+1. Visit the [Claude API Dashboard](https://console.anthropic.com/) and create a new API key.
 
 ### 5. Run the App
 
@@ -56,7 +56,7 @@ Go to [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 
 4. Invite the bot to a channel and mention the bot to see the response.
 
-You can deploy it anywhere you like, which supports Node.js or Docker.
+You can deploy the app wherever you prefer, as long as the environment supports Node.js or Docker.
 
 ## Options
 
@@ -64,7 +64,7 @@ Some options can be set with environment variables.
 
 | ENVS | default | description |
 | -------- | -------- | -------- |
-| FLAT_RESPONSE   | false  | In default, bot response will create a thread, if set true bot respond message to the channel.  |
+| FLAT_RESPONSE   | false  | If set to true, the bot will respond directly in the channel instead of creating a thread. |
 | REACTION_EMOJI   | `thinking_face` | Change the emoji displayed while the bot is processing. |
 | PORT   | 3000   | Port number.  |
-| SKIP_CLAUDE_API   | false   | If set true, skip Claude API call and always get dummy message.  |
+| SKIP_CLAUDE_API   | false   | If set to true, the bot will skip calling the Claude API and always provide a dummy message. |
