@@ -5,8 +5,9 @@ This is a straightforward Slackbot designed to facilitate interaction with the C
 - This is designed for use within a single Slack workspace.
 - Please note that this project is a work in progress and may have unresolved bugs or incomplete features.
 
-![image](./docs/image.png)
+## How it works
 
+![image](./docs/image.png)
 
 ## Features
 
