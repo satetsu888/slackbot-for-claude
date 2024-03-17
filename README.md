@@ -25,21 +25,25 @@ Go to [Slack API](https://api.slack.com/apps) and create a new app with [slack-a
 1. Go to `OAuth & Permissions` and click `Install App to Workspace`.
 2. Click `Allow` to grant the app the necessary permissions.
 
-*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and get the Bot Token. Please read [OAuth flow mode](#) for the details.
+*If you don't have a permission to install the app, you need to setup the app with OAuth flow mode and obtain the Bot Token. To obtain the Bot Token, the admin of your workspace needs to install the app. Please read [OAuth flow mode](#) for the details.
 
-### 3. Get the Bot Token
+### 3. Get the Slack Bot Token
 
 1. Go to `OAuth & Permissions` and copy the `Bot User OAuth Access Token`.
 
-### 4. Run the App
+### 4. Get the Claude API Key
+
+1. Go to [Claude API Dashboard](https://console.anthropic.com/) and create a new API key.
+
+### 5. Run the App
 
 1. Clone the repository.
 2. Set the following environment variables:
 
     ```bash
-    export SLACK_BOT_TOKEN=<Bot Token you get from the previous step>
+    export SLACK_BOT_TOKEN=<Slack Bot Token you get from the previous step>
     export SLACK_SIGNING_SECRET=<Get it from Slack App Basic Information>
-    export ANTHROPIC_API_KEY=<Create this in Claude API Dashboard>
+    export ANTHROPIC_API_KEY=<Claude API Key you get from the previous step>
     export CLAUDE_MODEL=claude-3-sonnet-20240229
     ```
 
